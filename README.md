@@ -7,9 +7,11 @@
 
 ### API
 #### POST /rest/jmx  
+```  
 Request URL:  http://hostname_or_ip:port/rest/jmx  
 Request Method:  POST  
 Status Code:  202 Accepted  
+```  
 
 Request Headers:  
 X_RESTJmeter_TOKEN:UkVTVEptZXRlcl9UT0tFTg==  
