@@ -15,6 +15,7 @@ Request Headers:
 X_RESTJmeter_TOKEN:UkVTVEptZXRlcl9UT0tFTg==  
 
 Request Payload:  
+```javascript  
 {
     "API"=>{
         "ServerName_or_IP"=>"www.google.com",
@@ -33,9 +34,12 @@ Request Payload:
         "DurationSeconds"=>"300"
     }
 }
+```  
 
 Response:  
+```json  
 {"test_id":"1607190613_NL_OA"}  
+```  
 
 #### GET  /rest/result/:testing_id  
 Request URL:  http://hostname_or_ip:port/rest/result/1607190613_NL_OA  
