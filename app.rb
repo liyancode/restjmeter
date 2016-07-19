@@ -92,9 +92,9 @@ end
 #
 # }
 post '/rest/jmx' do
-  if request.env["HTTP_X_AUTOJMX_TOKEN"]!=CONFIG["X_AUTOJMX_TOKEN"]
+  if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
     status 403
-    '{error:"X_AUTOJMX_TOKEN incorrect"}'
+    '{error:"X_RESTJmeter_TOKEN incorrect"}'
   else
     body_str=request.body.string
     begin
@@ -119,9 +119,9 @@ end
 
 # GET. return testing status and results to client
 get '/rest/result/:testid' do
-  if request.env["HTTP_X_AUTOJMX_TOKEN"]!=CONFIG["X_AUTOJMX_TOKEN"]
+  if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
     status 403
-    '{error:"X_AUTOJMX_TOKEN incorrect"}'
+    '{error:"X_RESTJmeter_TOKEN incorrect"}'
   else
     result=[]
     test_id= params[:testid]

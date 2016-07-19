@@ -1,6 +1,6 @@
 # Global Config
 SinatraPort: 9999
-X_AUTOJMX_TOKEN: "AutoJMX_Token" # Header for Auth
+X_RESTJmeter_TOKEN: "UkVTVEptZXRlcl9UT0tFTg==" # Header for Auth
 DataBase_Connection: "postgres://postgres:root@localhost:5432/restjmeter"
 JMX_File_DIR: "/Users/yanli6/Personal/DevDir/Code/rubymine/jmeter_auto_rest_service/test/" # Absolute dir path for jmx files
 JMeter_Reside_OS: "OSX"
