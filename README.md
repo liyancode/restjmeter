@@ -3,7 +3,7 @@
 
 ### Design overview Data Flow Diagram  
 
-![Alt text](/DFG.jpg)  
+![Alt text](https://github.com/liyancode/restjmeter/blob/master/DFG.JPG)  
 
 ### API
 #### POST /rest/jmx  
