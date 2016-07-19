@@ -37,7 +37,7 @@ Request Payload:
 ```  
 
 Response:  
-```json  
+```javascript  
 {"test_id":"1607190613_NL_OA"}  
 ```  
 
@@ -50,4 +50,6 @@ Request Headers:
 X_RESTJmeter_TOKEN:UkVTVEptZXRlcl9UT0tFTg==  
 
 Response:  
-{"test_id":"1607190613_NL_OA","status":"success","results":[{"id":3,"testid":"1607190613_NL_OA","time_stamp":1468908794,"label":"www.google.com","samples":1,"average":587,"median":587,"perc90_line":587,"perc95_line":null,"perc99_line":null,"min":587,"max":587,"error_rate":100.0,"throughput":1.7,"kb_per_sec":3.0}]}
+```javascript  
+{"test_id":"1607190613_NL_OA","status":"success","results":[{"id":3,"testid":"1607190613_NL_OA","time_stamp":1468908794,"label":"www.google.com","samples":1,"average":587,"median":587,"perc90_line":587,"perc95_line":null,"perc99_line":null,"min":587,"max":587,"error_rate":100.0,"throughput":1.7,"kb_per_sec":3.0}]}  
+```
