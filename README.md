@@ -40,7 +40,7 @@ Response:
 {"test_id":"1607190613_NL_OA"}  
 ```  
 
-#### GET  /rest/result/:testing_id  
+#### GET  /rest/result/:testid  
 ```  
 Request URL:  http://hostname_or_ip:port/rest/result/1607190613_NL_OA  
 Request Method:  GET  
