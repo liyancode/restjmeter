@@ -88,8 +88,11 @@ end
 #     },
 #     "SchedulerConfiguration"=>{
 #         "DurationSeconds"=>"300"
-#     }
-#
+#     },
+#     "UserDefinedVariables"=>[
+#        ["variable_name1","4124324312,43214134,41514554,54352525,542352345,54235"],
+#        []
+#     ]
 # }
 post '/rest/jmx' do
   if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
