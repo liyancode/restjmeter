@@ -98,6 +98,9 @@ module RESTJMeter
         p "[step 2] Connecting to DB successfully..."
         sql="insert into jmeter_aggregate_report(testid,time_stamp,label,samples,average,median,perc90_line,min,max,error_rate,throughput,kb_per_sec) values #{insert_sql_values_str}"
         p "[step 2] SQL: #{sql}"
+        if sql.include?("∞")
+          sql.gsub!("∞","0")
+        end
         db.fetch(sql).insert
         p "[step 2] Data inserted into DB..."
       rescue Exception=>e
