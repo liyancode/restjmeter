@@ -55,7 +55,7 @@ module RESTJMeter
                 csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
-            visit name:"#{body_hash["API"]["Path"]}",
+            visit name:"#{body_hash["API"]["Path"].split("?")[0]}",
                   url:"#{body_hash["API"]["ServerName_or_IP"]}",
                   protocol:"#{body_hash["API"]["Http_or_Https"]}",
                   method:"#{method_type}",
@@ -78,7 +78,7 @@ module RESTJMeter
               csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
-            post name:"#{body_hash["API"]["Path"]}",
+            post name:"#{body_hash["API"]["Path"].split("?")[0]}",
                  url:"#{body_hash["API"]["ServerName_or_IP"]}",
                  protocol:"#{body_hash["API"]["Http_or_Https"]}",
                  method:"#{method_type}",
@@ -102,7 +102,7 @@ module RESTJMeter
               csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
-            post name:"#{body_hash["API"]["Path"]}",
+            post name:"#{body_hash["API"]["Path"].split("?")[0]}",
                  url:"#{body_hash["API"]["ServerName_or_IP"]}",
                  protocol:"#{body_hash["API"]["Http_or_Https"]}",
                  method:"#{method_type}",
