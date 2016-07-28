@@ -33,5 +33,16 @@ module RESTJMeter
         p e
       end
     end
+
+    # @param csv_file_name: must be absolute path ended with .csv
+    # @param content_string: ***,***,***,***... will split by ','
+    def Util.generate_csv_data_set_file(csv_file_name,content_string)
+      begin
+        csv= File.new(csv_file_name,"a")
+        csv.puts(content_string.split(","))
+      rescue Exception=>e
+        p e
+      end
+    end
   end
 end
