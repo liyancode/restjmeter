@@ -31,6 +31,14 @@ module RESTJMeter
     #
     # }
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
+      # judge UserDefinedVariables is null or not
+      user_defined_vars=body_hash["UserDefinedVariables"]
+      if user_defined_vars.size!=0
+        user_defined_vars.each{|var_arr|
+          csv= File.new("#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv","a")
+          csv.puts(var_arr[1].split(","))
+        }
+      end
       header_array=[]
       body_hash["Headers"].each{|h|
         header_array<<{name:h[0],value:h[1]}
@@ -43,8 +51,12 @@ module RESTJMeter
                   loops:body_hash["ThreadProperties"]["LoopCount"].to_i,
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
+            user_defined_vars.each{|var_arr|
+                csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+            }
             aggregate_report
-            visit url:"#{body_hash["API"]["ServerName_or_IP"]}",
+            visit name:"#{body_hash["API"]["Path"]}",
+                  url:"#{body_hash["API"]["ServerName_or_IP"]}",
                   protocol:"#{body_hash["API"]["Http_or_Https"]}",
                   method:"#{method_type}",
                   path: "#{body_hash["API"]["Path"]}",
@@ -62,8 +74,36 @@ module RESTJMeter
                   loops:body_hash["ThreadProperties"]["LoopCount"].to_i,
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
+            user_defined_vars.each{|var_arr|
+              csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+            }
             aggregate_report
-            post url:"#{body_hash["API"]["ServerName_or_IP"]}",
+            post name:"#{body_hash["API"]["Path"]}",
+                 url:"#{body_hash["API"]["ServerName_or_IP"]}",
+                 protocol:"#{body_hash["API"]["Http_or_Https"]}",
+                 method:"#{method_type}",
+                 path: "#{body_hash["API"]["Path"]}",
+                 implementation:'HttpClient4',
+                 connect_timeout: '30000',
+                 response_timeout: '60000',
+                 raw_body:body_hash["API"]["BodyData"] do
+              header header_array
+            end
+          end
+        end.jmx(file: jmx_file_name)
+      elsif method_type.upcase=='PUT'
+        p "#{test_id} PUT"
+        test name:test_id do
+          threads count:body_hash["ThreadProperties"]["Number_of_Threads"].to_i,
+                  loops:body_hash["ThreadProperties"]["LoopCount"].to_i,
+                  scheduler:false do
+            cookies clear_each_iteration: true# HTTP Cookie Manager
+            user_defined_vars.each{|var_arr|
+              csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+            }
+            aggregate_report
+            post name:"#{body_hash["API"]["Path"]}",
+                 url:"#{body_hash["API"]["ServerName_or_IP"]}",
                  protocol:"#{body_hash["API"]["Http_or_Https"]}",
                  method:"#{method_type}",
                  path: "#{body_hash["API"]["Path"]}",
@@ -76,6 +116,7 @@ module RESTJMeter
           end
         end.jmx(file: jmx_file_name)
       else
+        p "#{method_type} is not supported."
       end
       p "jmx generated!"
     end
