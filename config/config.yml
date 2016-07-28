@@ -2,6 +2,7 @@
 SinatraPort: 9999
 X_RESTJmeter_TOKEN: "UkVTVEptZXRlcl9UT0tFTg==" # Header for Auth
 DataBase_Connection: "postgres://postgres:root@localhost:5432/restjmeter"
+User_Defined_Vars_CSV_Dir: "/Users/yanli6/Personal/DevDir/Code/rubymine/jmeter_auto_rest_service/test/csv_data_set_files/"
 JMX_File_DIR: "/Users/yanli6/Personal/DevDir/Code/rubymine/jmeter_auto_rest_service/test/" # Absolute dir path for jmx files
 JMeter_Reside_OS: "OSX"
 JMeter_Home: "/Users/yanli6/Personal/DevDir/DevTools/apache-jmeter-2.13"
