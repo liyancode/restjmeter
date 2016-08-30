@@ -32,11 +32,15 @@ module RESTJMeter
     # }
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
       # judge UserDefinedVariables is null or not
+      p body_hash
       user_defined_vars=body_hash["UserDefinedVariables"]
       if user_defined_vars.size!=0
         user_defined_vars.each{|var_arr|
           csv= File.new("#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv","a")
           csv.puts(var_arr[1].split(","))
+          csv.flush
+          # STDOUT.flush
+          p "CSV file created:#{var_arr[0]} "
         }
       end
       header_array=[]
