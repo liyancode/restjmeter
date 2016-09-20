@@ -52,7 +52,7 @@ module RESTJMeter
         p "#{test_id} GET"
         test name:test_id do
           threads count:body_hash["ThreadProperties"]["Number_of_Threads"].to_i,
-                  rampup: CONFIG["ThreadGroup_RampUpPeriod_Default"],dd
+                  rampup: CONFIG["ThreadGroup_RampUpPeriod_Default"],
                   loops:body_hash["ThreadProperties"]["LoopCount"].to_i,
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
