@@ -34,7 +34,7 @@ Thread.new{
 
           time_now=Time.now
           # generate daily results dir
-          # daily_results_dir=RESTJMeter::Controller.daily_results_dir(time_now)
+          RESTJMeter::Controller.daily_results_dir(time_now)
           # generate results dir for testid
           test_results_dir=RESTJMeter::Controller.test_results_dir(time_now,test_id)
 
@@ -56,6 +56,7 @@ Thread.new{
 
           # delete temp files.
           # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
+            p "[end] Testing for #{test_id} done."
         rescue Exception=>e
           p e
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')
