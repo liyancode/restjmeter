@@ -35,6 +35,24 @@ module RESTJMeter
       end
     end
 
+    # jmx_file_name: ****.jmx
+    # test_results_dir must end with '\' like 'C:\perf-team-shared-files\yanli\projects\restjmeter\data\perfmon_jmx\'
+    def Controller.append_perfmon_to_jmx(jmx_file_name,test_id,target_host,test_results_dir)
+      p "[step 0.1] append_perfmon_to_jmx..."
+      begin
+        doc=Nokogiri::XML(File.open("#{jmx_file_name}"))
+        perfmon_str=Util.generate_perfmon_monitor_xml_str(test_id,target_host,test_results_dir)
+        if perfmon_str!=nil
+          doc.xpath("//hashTree//hashTree//hashTree").first<<perfmon_str
+          File.open("#{jmx_file_name}", 'w') do |file|
+            file.print doc.to_xml
+          end
+        end
+      rescue Exception=>e
+        p "[step 0] Exception(#{e.to_s}) happened when append_perfmon_to_jmx!"
+        exit
+      end
+    end
     # ----------------------------------------------------------------
     # 1. run jmeter testing(CMD), generate aggregate report .csv file
     # ----------------------------------------------------------------
