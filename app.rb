@@ -34,12 +34,14 @@ Thread.new{
 
           time_now=Time.now
           # generate daily results dir
-          daily_results_dir=RESTJMeter::Controller.daily_results_dir(time_now)
+          # daily_results_dir=RESTJMeter::Controller.daily_results_dir(time_now)
+          # generate results dir for testid
+          test_results_dir=RESTJMeter::Controller.test_results_dir(time_now,test_id)
 
           # generate jmeter_jtl_temp_file
-          jmeter_jtl_temp_file="#{daily_results_dir}/temp_jtl_#{time_now.to_i}.jtl"
+          jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_now.to_i}.jtl"
           # generate jmeter_csv_file
-          jmeter_csv_file="#{daily_results_dir}/#{test_id}.csv"
+          jmeter_csv_file="#{test_results_dir}/#{test_id}.csv"
 
           # run testing
           RESTJMeter::Controller.run_jmeter(jmx_file_name,jmeter_jtl_temp_file,jmeter_csv_file)
