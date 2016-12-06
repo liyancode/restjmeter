@@ -2,7 +2,7 @@
 module RESTJMeter
   class Controller
     def Controller.daily_results_dir(time_now)
-      p "[start] JMeter Helper start..."
+      p "[start] Controller start..."
       begin
         daily_results_dir="#{CONFIG["Aggregate_Results_Dir"]}/#{time_now.year}-#{time_now.month}-#{time_now.day}"
         if !Dir.exists?(daily_results_dir)
@@ -19,7 +19,7 @@ module RESTJMeter
     end
 
     def Controller.test_results_dir(time_now,test_id)
-      p "[start] JMeter Helper start..."
+      # p "[start] JMeter Helper start..."
       begin
         test_results_dir="#{CONFIG["Aggregate_Results_Dir"]}/#{time_now.year}-#{time_now.month}-#{time_now.day}/#{test_id}"
         if !Dir.exists?(test_results_dir)
@@ -30,7 +30,7 @@ module RESTJMeter
         end
         test_results_dir
       rescue Exception=>e
-        p "[step 0] Exception(#{e.to_s}) happened when creating #{test_results_dir}. exit!"
+        p "[step 0] Exception(#{e.to_s}) happened when creating #{test_results_dir} exit!"
         exit
       end
     end
