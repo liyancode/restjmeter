@@ -51,8 +51,8 @@ Thread.new{
 
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
 
-          # delete temp files
-          RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file)
+          # delete temp files.
+          # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
         rescue Exception=>e
           p e
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')
