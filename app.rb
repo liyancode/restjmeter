@@ -38,6 +38,9 @@ Thread.new{
           # generate results dir for testid
           test_results_dir=RESTJMeter::Controller.test_results_dir(time_now,test_id)
 
+          # append perfmon monitor to jmx file
+          RESTJMeter::Controller.append_perfmon_to_jmx(jmx_file_name,test_id,jmx_body["TargetHost"],test_results_dir+"/")
+
           # generate jmeter_jtl_temp_file
           jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_now.to_i}.jtl"
           # generate jmeter_csv_file
@@ -94,7 +97,8 @@ end
 #     "UserDefinedVariables"=>[
 #        ["variable_name1","4124324312,43214134,41514554,54352525,542352345,54235"],
 #        []
-#     ]
+#     ],
+#     "TargetHost"=>"slce004byx001.slce004.com"
 # }
 post '/rest/jmx' do
   if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
