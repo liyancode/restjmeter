@@ -45,9 +45,11 @@ module RESTJMeter
       end
     end
 
+    # csv format: C:\perf-team-shared-files\yanli\projects\restjmeter\data\perfmon_jmx\1610080626_JJ_WT_cpu.csv
     def Util.generate_perfmon_monitor_xml_str(test_id,target_host,perfmon_results_csv_dir)
       begin
-        '<kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="perfmon_cpu" enabled="true">
+        if (test_id!=nil&&test_id!='')&&(target_host!=nil&&target_host!='')&&(perfmon_results_csv_dir!=nil&&perfmon_results_csv_dir!='')
+        return '<kg.apc.jmeter.perfmon.PerfMonCollector guiclass="kg.apc.jmeter.vizualizers.PerfMonGui" testclass="kg.apc.jmeter.perfmon.PerfMonCollector" testname="perfmon_cpu" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
@@ -382,9 +384,12 @@ module RESTJMeter
             </collectionProp>
           </collectionProp>
         </kg.apc.jmeter.perfmon.PerfMonCollector>'
+        else
+          return nil
+        end
       rescue Exception=>e
         p "Util.generate_perfmon_monitor_xml_str exception:#{e.to_s}"
-        nil
+        return nil
       end
     end
   end
