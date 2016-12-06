@@ -18,6 +18,23 @@ module RESTJMeter
       end
     end
 
+    def Controller.test_results_dir(time_now,test_id)
+      p "[start] JMeter Helper start..."
+      begin
+        test_results_dir="#{CONFIG["Aggregate_Results_Dir"]}/#{time_now.year}-#{time_now.month}-#{time_now.day}/#{test_id}"
+        if !Dir.exists?(test_results_dir)
+          Dir.mkdir(test_results_dir)
+          p "[step 0] #{test_results_dir} created..."
+        else
+          p "[step 0] #{test_results_dir} already existed..."
+        end
+        test_results_dir
+      rescue Exception=>e
+        p "[step 0] Exception(#{e.to_s}) happened when creating #{test_results_dir}. exit!"
+        exit
+      end
+    end
+
     # ----------------------------------------------------------------
     # 1. run jmeter testing(CMD), generate aggregate report .csv file
     # ----------------------------------------------------------------
