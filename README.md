@@ -37,7 +37,8 @@ Request Payload:
     "UserDefinedVariables"=>[
         ["variable_name1","4124324312,43214134,41514554,54352525,542352345,54235"],
         []
-    ]
+    ],
+    "TargetHost"=>"***.com"
 }  
 
 Response:  

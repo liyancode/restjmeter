@@ -28,7 +28,7 @@ module RESTJMeter
     #        ["variable_name1","4124324312,43214134,41514554,54352525,542352345,54235"],
     #        []
     #     ],
-    #     "TargetHost"=>"slce004byx001.slce004.com"
+    #     "TargetHost"=>"***.com"
     # }
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
       # judge UserDefinedVariables is null or not
