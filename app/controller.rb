@@ -158,5 +158,57 @@ module RESTJMeter
       p "[step 3] #{jmeter_jtl_temp_file} deleted..."
       p "[end] JMeter Helper end."
     end
+
+    # extract data from perfmon csv file and save to db
+    def Controller.save_perfmon_data_to_db(db,test_id,jmeter_perfmon_csv_file)
+      all_lines=[]
+      begin
+        p "[step 2] save_perfmon_data_to_db Reading CSV file..."
+        i=0
+        # header: timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,bytes,grpThreads,allThreads,Latency
+        # line format: 1481018510840,2020,slce007byx001.slce007.com CPU CPU_user,,,,,true,0,0,0,0
+        File.open(jmeter_perfmon_csv_file, "r") do |f|
+          f.each_line do |line|
+            if i==0
+              # ignore the first line header
+              i=-1
+            else
+              if line!=nil&&line!=''
+                all_lines<<line
+              end
+            end
+          end
+        end
+      rescue Exception=>e
+        p "[step 2] Exception(#{e.to_s}) happened during save_perfmon_data_to_db reading CSV file. exit!"
+        exit
+      end
+
+      label_value_hash={} #
+      all_lines.each{|line|
+        if line!=nil&&line!=''
+          line_arr=line.split(',')
+          if label_value_hash.has_key?(line_arr[2])
+            label_value_hash[line_arr[2]]["time_stamp_str"]+="_#{line_arr[0]}"
+            label_value_hash[line_arr[2]]["value_str"]+="_#{line_arr[1]}"
+          else
+            label_value_hash[line_arr[2]]={"time_stamp_str"=>line_arr[0],"value_str"=>line_arr[1]}
+          end
+        end
+      }
+
+      begin
+        label_value_hash.each{|label_value|
+          label=label[0]
+          time_stamp_str=label_value[1]["time_stamp_str"]
+          value_str=label_value[1]["value_str"]
+          sql="insert into jmeter_perfmon_metric(testid,metric_type,label,time_stamp_str,value_str) values ('#{test_id}','#{Util.which_metric_type(label)}','#{label}','#{time_stamp_str}','#{value_str}')"
+          db.fetch(sql).insert
+        }
+      rescue Exception=>e
+        p "[step 2] Exception(#{e.to_s}) happened during save_perfmon_data_to_db inserting data into DB. exit!"
+        exit
+      end
+    end
   end
 end

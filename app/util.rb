@@ -392,5 +392,24 @@ module RESTJMeter
         return nil
       end
     end
+
+    # get metric type from label
+    def Util.which_metric_type(label)
+      if label.downcase.index('cpu')!=nil
+        return 'cpu'
+      elsif label.downcase.index('disk')!=nil
+        return 'disk'
+      elsif label.downcase.index('memory')!=nil
+        return 'memory'
+      elsif label.downcase.index('network')!=nil
+        return 'network'
+      elsif label.downcase.index('tcp')!=nil
+        return 'tcp'
+      elsif label.downcase.index('jmx')!=nil
+        return 'jmx'
+      else
+        return 'unknow'
+      end
+    end
   end
 end
