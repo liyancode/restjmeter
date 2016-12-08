@@ -9,3 +9,6 @@ JMeter_Home: "/Users/yanli6/Personal/DevDir/DevTools/apache-jmeter-2.13"
 Aggregate_Results_Dir: "/Users/yanli6/Personal/DevDir/Code/rubymine/jmeter_auto_rest_service/test/aggregate_results"
 
 ThreadGroup_RampUpPeriod_Default: 0
+
+System_Log_File: "/Users/yanli6/Personal/DevDir/Code/rubymine/testproj/xmltest/xmlfile/system_log.log"
+System_Log_Level: "DEBUG"
