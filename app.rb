@@ -22,8 +22,12 @@ Thread.new{
     mutex.synchronize{
       if msg_queue.size>0
         begin
+          p "==Current MSG Q size: #{msg_queue.size}"
+          LOGGER.info("==Current MSG Q size: #{msg_queue.size}, now pop one to test...")
           temp_msg=msg_queue.pop
           test_id=temp_msg[0]
+          p "====Testing: #{test_id} started..."
+          LOGGER.info("====Testing: #{test_id} started...")
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'running')
           jmx_body=temp_msg[1]
           jmx_file_name="#{CONFIG["JMX_File_DIR"]}#{test_id}.jmx"
@@ -59,10 +63,13 @@ Thread.new{
           RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,"1612061001_LB_KI","/Users/yanli6/Desktop/1612061001_LB_KI")
           # delete temp files.
           # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
-          p "[end] Testing for #{test_id} done."
+          p "====Testing: #{test_id} end."
+          LOGGER.info("====Testing: #{test_id} end.")
         rescue Exception=>e
           p e
+          LOGGER.error("====Testing: #{test_id} error:#{e}")
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')
+          LOGGER.info("====Testing: #{test_id} end.")
         end
       end
     }

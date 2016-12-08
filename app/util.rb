@@ -22,6 +22,7 @@ module RESTJMeter
         db.fetch("insert into jmeter_jmx_log(testid,status,time_stamp,jmx_content) values('#{test_id}','#{status}',#{Time.now.to_i},'#{jmx_str}')").insert
       rescue Exception=>e
         p e
+        LOGGER.error "Util.log_jmx_str #{e}"
       end
     end
 
@@ -31,6 +32,7 @@ module RESTJMeter
         db.fetch("update jmeter_jmx_log set status='#{new_status}' where testid='#{test_id}'").update
       rescue Exception=>e
         p e
+        LOGGER.error "Util.update_log_jmx_str_status #{e}"
       end
     end
 
@@ -42,6 +44,7 @@ module RESTJMeter
         csv.puts(content_string.split(","))
       rescue Exception=>e
         p e
+        LOGGER.error "Util.generate_csv_data_set_file #{e}"
       end
     end
 
@@ -389,6 +392,7 @@ module RESTJMeter
         end
       rescue Exception=>e
         p "Util.generate_perfmon_monitor_xml_str exception:#{e.to_s}"
+        LOGGER.error "Util.generate_perfmon_monitor_xml_str exception:#{e.to_s}"
         return nil
       end
     end

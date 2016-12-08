@@ -3,17 +3,21 @@ module RESTJMeter
   class Controller
     def Controller.daily_results_dir(time_now)
       p "[start] Controller start..."
+      LOGGER.info("[start] Controller start...")
       begin
         daily_results_dir="#{CONFIG["Aggregate_Results_Dir"]}/#{time_now.year}-#{time_now.month}-#{time_now.day}"
         if !Dir.exists?(daily_results_dir)
           Dir.mkdir(daily_results_dir)
           p "[step 0] #{daily_results_dir} created..."
+          LOGGER.info "[step 0] #{daily_results_dir} created..."
         else
           p "[step 0] #{daily_results_dir} already existed..."
+          LOGGER.info "[step 0] #{daily_results_dir} already existed..."
         end
         daily_results_dir
       rescue Exception=>e
         p "[step 0] Exception(#{e.to_s}) happened when creating #{daily_results_dir}. exit!"
+        LOGGER.error "[step 0] Exception(#{e.to_s}) happened when creating #{daily_results_dir}. exit!"
         exit
       end
     end
@@ -25,12 +29,15 @@ module RESTJMeter
         if !Dir.exists?(test_results_dir)
           Dir.mkdir(test_results_dir)
           p "[step 0] #{test_results_dir} created..."
+          LOGGER.info "[step 0] #{test_results_dir} created..."
         else
           p "[step 0] #{test_results_dir} already existed..."
+          LOGGER.info "[step 0] #{test_results_dir} already existed..."
         end
         test_results_dir
       rescue Exception=>e
         p "[step 0] Exception(#{e.to_s}) happened when creating #{test_results_dir} exit!"
+        LOGGER.error "[step 0] Exception(#{e.to_s}) happened when creating #{test_results_dir} exit!"
         exit
       end
     end
@@ -39,6 +46,7 @@ module RESTJMeter
     # test_results_dir must end with '\' like 'C:\perf-team-shared-files\yanli\projects\restjmeter\data\perfmon_jmx\'
     def Controller.append_perfmon_to_jmx(jmx_file_name,test_id,target_host,test_results_dir)
       p "[step 0.1] append_perfmon_to_jmx..."
+      LOGGER.info "[step 0.1] append_perfmon_to_jmx..."
       begin
         doc=Nokogiri::XML(File.open("#{jmx_file_name}"))
         perfmon_str=Util.generate_perfmon_monitor_xml_str(test_id,target_host,test_results_dir)
@@ -50,6 +58,7 @@ module RESTJMeter
         end
       rescue Exception=>e
         p "[step 0] Exception(#{e.to_s}) happened when append_perfmon_to_jmx!"
+        LOGGER.error "[step 0] Exception(#{e.to_s}) happened when append_perfmon_to_jmx!"
         exit
       end
     end
@@ -63,6 +72,7 @@ module RESTJMeter
 
       begin
         p "[step 1] Start JMeter Testing..."
+        LOGGER.info "[step 1] Start JMeter Testing..."
         case CONFIG["JMeter_Reside_OS"].downcase
           when "win"
             system("#{CONFIG["JMeter_Home"]}/bin/jmeter.bat -n -t #{jmeter_jmx_file} -l #{jmeter_jtl_temp_file}")
@@ -73,18 +83,23 @@ module RESTJMeter
         end
       rescue Exception
         p "[step 1] Exception(#{e.to_s}) happened during JMeter Testing. exit!"
+        LOGGER.error "[step 1] Exception(#{e.to_s}) happened during JMeter Testing. exit!"
         exit
       end
 
       p "[step 1] JMeter Testing Finished..."
+      LOGGER.info "[step 1] JMeter Testing Finished..."
       begin
         p "[step 1] Generating CSV report(#{jmeter_csv_file})..."
+        LOGGER.info "[step 1] Generating CSV report(#{jmeter_csv_file})..."
         system("java -jar #{CONFIG["JMeter_Home"]}/lib/ext/CMDRunner.jar --tool Reporter --generate-csv #{jmeter_csv_file} --input-jtl #{jmeter_jtl_temp_file} --plugin-type AggregateReport")
       rescue Exception=>e
         p "[step 1] Exception(#{e.to_s}) happened during Generating CSV report. exit!"
+        LOGGER.error "[step 1] Exception(#{e.to_s}) happened during Generating CSV report. exit!"
         exit
       end
       p "[step 1] CSV report generated..."
+      LOGGER.info "[step 1] CSV report generated..."
     end
 
     # --------------------------------
@@ -104,6 +119,7 @@ module RESTJMeter
       insert_sql_values_str=""
       begin
         p "[step 2] Reading CSV file..."
+        LOGGER.info "[step 2] Reading CSV file..."
         time_stamp=time_now.to_i
         i=0
         # header: sampler_label,aggregate_report_count,average,aggregate_report_median,aggregate_report_90%_line,aggregate_report_min,aggregate_report_max,aggregate_report_error%,aggregate_report_rate,aggregate_report_bandwidth,aggregate_report_stddev
@@ -124,6 +140,7 @@ module RESTJMeter
         end
       rescue Exception=>e
         p "[step 2] Exception(#{e.to_s}) happened during reading CSV file. exit!"
+        LOGGER.error "[step 2] Exception(#{e.to_s}) happened during reading CSV file. exit!"
         exit
       end
 
@@ -131,15 +148,18 @@ module RESTJMeter
       begin
         # DB = Sequel.connect(PostgreSQL_Connection)
         p "[step 2] Connecting to DB successfully..."
+        LOGGER.info "[step 2] Connecting to DB successfully..."
         sql="insert into jmeter_aggregate_report(testid,time_stamp,label,samples,average,median,perc90_line,min,max,error_rate,throughput,kb_per_sec) values #{insert_sql_values_str}"
-        p "[step 2] SQL: #{sql}"
+        LOGGER.info "[step 2] SQL: #{sql}"
         if sql.include?("∞")
           sql.gsub!("∞","0")
         end
         db.fetch(sql).insert
         p "[step 2] Data inserted into DB..."
+        LOGGER.info "[step 2] Data inserted into DB..."
       rescue Exception=>e
         p "[step 2] Exception(#{e.to_s}) happened during inserting data into DB. exit!"
+        LOGGER.error "[step 2] Exception(#{e.to_s}) happened during inserting data into DB. exit!"
         exit
       end
     end
@@ -150,13 +170,15 @@ module RESTJMeter
     def Controller.delete_temp_jtl(jmeter_jtl_temp_file)
       begin
         p "[step 3] Deleting #{jmeter_jtl_temp_file} ..."
+        LOGGER.info "[step 3] Deleting #{jmeter_jtl_temp_file} ..."
         File.delete(jmeter_jtl_temp_file)
       rescue Exception=>e
         p "[step 3] Exception(#{e.to_s}) happened during deleting temp jtl file. exit!"
+        LOGGER.error "[step 3] Exception(#{e.to_s}) happened during deleting temp jtl file. exit!"
         exit
       end
       p "[step 3] #{jmeter_jtl_temp_file} deleted..."
-      p "[end] JMeter Helper end."
+      LOGGER.info "[step 3] #{jmeter_jtl_temp_file} deleted..."
     end
 
     # extract data from perfmon csv file and save to db
@@ -164,6 +186,7 @@ module RESTJMeter
       all_lines=[]
       begin
         p "[step 2] save_perfmon_data_to_db Reading CSV file..."
+        LOGGER.info "[step 2] save_perfmon_data_to_db Reading CSV file..."
         i=0
         # header: timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,bytes,grpThreads,allThreads,Latency
         # line format: 1481018510840,2020,slce007byx001.slce007.com CPU CPU_user,,,,,true,0,0,0,0
@@ -181,6 +204,7 @@ module RESTJMeter
         end
       rescue Exception=>e
         p "[step 2] save_perfmon_data_to_db fetch_all_lines Exception(#{e.to_s}) happened during reading CSV file. exit!"
+        LOGGER.error "[step 2] save_perfmon_data_to_db fetch_all_lines Exception(#{e.to_s}) happened during reading CSV file. exit!"
         exit
       end
 
@@ -203,11 +227,13 @@ module RESTJMeter
           time_stamp_str=label_value[1]["time_stamp_str"]
           value_str=label_value[1]["value_str"]
           sql="insert into jmeter_perfmon_metric(testid,metric_type,label,time_stamp_str,value_str) values ('#{test_id}','#{Util.which_metric_type(label)}','#{label}','#{time_stamp_str}','#{value_str}')"
-          p "[step 2] == SQL: #{sql}"
+          # p "[step 2] == SQL: #{sql}"
+          LOGGER.info "[step 2] == SQL: #{sql}"
           db.fetch(sql).insert
         }
       rescue Exception=>e
         p "[step 2] save_perfmon_data_to_db to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
+        LOGGER.error "[step 2] save_perfmon_data_to_db to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
         exit
       end
     end
@@ -223,6 +249,8 @@ module RESTJMeter
         self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_jmx.csv")
       rescue Exception=>e
         p "[step 2.1] save_all_perfmon_data_to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
+        LOGGER.error "[step 2.1] save_all_perfmon_data_to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
+        exit
       end
     end
   end

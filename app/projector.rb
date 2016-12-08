@@ -33,6 +33,7 @@ module RESTJMeter
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
       # judge UserDefinedVariables is null or not
       p body_hash
+      LOGGER.info body_hash
       user_defined_vars=body_hash["UserDefinedVariables"]
       if user_defined_vars.size!=0
         user_defined_vars.each{|var_arr|
@@ -41,6 +42,7 @@ module RESTJMeter
           csv.flush
           # STDOUT.flush
           p "CSV file created:#{var_arr[0]} "
+          LOGGER.info "CSV file created:#{var_arr[0]} "
         }
       end
       header_array=[]
@@ -50,6 +52,7 @@ module RESTJMeter
       method_type=body_hash["API"]["Method"]
       if method_type.upcase=='GET'
         p "#{test_id} GET"
+        LOGGER.info "#{test_id} GET"
         test name:test_id do
           threads count:body_hash["ThreadProperties"]["Number_of_Threads"].to_i,
                   rampup: CONFIG["ThreadGroup_RampUpPeriod_Default"],
@@ -75,6 +78,7 @@ module RESTJMeter
         end.jmx(file: jmx_file_name)
       elsif method_type.upcase=='POST'
         p "#{test_id} POST"
+        LOGGER.info "#{test_id} POST"
         test name:test_id do
           threads count:body_hash["ThreadProperties"]["Number_of_Threads"].to_i,
                   rampup: CONFIG["ThreadGroup_RampUpPeriod_Default"],
@@ -100,6 +104,7 @@ module RESTJMeter
         end.jmx(file: jmx_file_name)
       elsif method_type.upcase=='PUT'
         p "#{test_id} PUT"
+        LOGGER.info "#{test_id} PUT"
         test name:test_id do
           threads count:body_hash["ThreadProperties"]["Number_of_Threads"].to_i,
                   rampup: CONFIG["ThreadGroup_RampUpPeriod_Default"],
@@ -125,8 +130,10 @@ module RESTJMeter
         end.jmx(file: jmx_file_name)
       else
         p "#{method_type} is not supported."
+        LOGGER.info "#{method_type} is not supported."
       end
       p "jmx generated!"
+      LOGGER.info "jmx generated!"
     end
   end
 end
