@@ -83,6 +83,7 @@ Thread.new{
 
 # filter. requests that not begin with '/rest' will be recognized as bad request
 before /^(?!\/(rest).*)/ do
+  LOGGER.info("Access log. Bad request in:#{request}")
   status 400
   '{error:"bad request. your request endpoint should start with /rest."}'
 end
@@ -113,10 +114,12 @@ end
 # }
 post '/rest/jmx' do
   if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
+    LOGGER.info("Access log. Request with invalid HTTP_X_RESTJMETER_TOKEN:#{request.env["HTTP_X_RESTJMETER_TOKEN"]}")
     status 403
     '{error:"X_RESTJmeter_TOKEN incorrect"}'
   else
     body_str=request.body.string
+    LOGGER.info("Access log. Request body:#{body_str}")
     begin
       body_hash=eval(body_str)
       test_id=RESTJMeter::Util.generate_testid # unique random id
@@ -131,6 +134,8 @@ post '/rest/jmx' do
     rescue Exception=>e
       p e
       p "Incorrect body:#{body_str}"
+      LOGGER.error("Access log. Incorrect Request body:#{body_str}")
+      LOGGER.error("Access log. Incorrect Request body exception:#{e}")
       status 400
       '{error:"body format incorrect"}'
     end
@@ -139,7 +144,9 @@ end
 
 # GET. return testing status and results to client
 get '/rest/result/:testid' do
+  LOGGER.info("Access log. GET: #{request}")
   if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
+    LOGGER.info("Access log. Request with invalid HTTP_X_RESTJMETER_TOKEN:#{request.env["HTTP_X_RESTJMETER_TOKEN"]}")
     status 403
     '{error:"X_RESTJmeter_TOKEN incorrect"}'
   else
