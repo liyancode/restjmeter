@@ -54,9 +54,12 @@ Thread.new{
 
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
 
+          # save all perfmon metrics data to db
+          # RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,test_id,test_results_dir)
+          RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,"1612061001_LB_KI","/Users/yanli6/Desktop/1612061001_LB_KI")
           # delete temp files.
           # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
-            p "[end] Testing for #{test_id} done."
+          p "[end] Testing for #{test_id} done."
         rescue Exception=>e
           p e
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')

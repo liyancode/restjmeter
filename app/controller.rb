@@ -180,7 +180,7 @@ module RESTJMeter
           end
         end
       rescue Exception=>e
-        p "[step 2] Exception(#{e.to_s}) happened during save_perfmon_data_to_db reading CSV file. exit!"
+        p "[step 2] save_perfmon_data_to_db fetch_all_lines Exception(#{e.to_s}) happened during reading CSV file. exit!"
         exit
       end
 
@@ -199,15 +199,30 @@ module RESTJMeter
 
       begin
         label_value_hash.each{|label_value|
-          label=label[0]
+          label=label_value[0]
           time_stamp_str=label_value[1]["time_stamp_str"]
           value_str=label_value[1]["value_str"]
           sql="insert into jmeter_perfmon_metric(testid,metric_type,label,time_stamp_str,value_str) values ('#{test_id}','#{Util.which_metric_type(label)}','#{label}','#{time_stamp_str}','#{value_str}')"
+          p "[step 2] == SQL: #{sql}"
           db.fetch(sql).insert
         }
       rescue Exception=>e
-        p "[step 2] Exception(#{e.to_s}) happened during save_perfmon_data_to_db inserting data into DB. exit!"
+        p "[step 2] save_perfmon_data_to_db to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
         exit
+      end
+    end
+
+    # jmeter_perfmon_csv_file_folder: end without '/'
+    def Controller.save_all_perfmon_data_to_db(db,test_id,jmeter_perfmon_csv_file_folder)
+      begin
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_cpu.csv")
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_memory.csv")
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_disk.csv")
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_network.csv")
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_tcp.csv")
+        self.save_perfmon_data_to_db(db,test_id,"#{jmeter_perfmon_csv_file_folder}/#{test_id}_jmx.csv")
+      rescue Exception=>e
+        p "[step 2.1] save_all_perfmon_data_to_db Exception(#{e.to_s}) happened during inserting data into DB. exit!"
       end
     end
   end
