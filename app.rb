@@ -36,25 +36,28 @@ Thread.new{
           # generate_jmx_file(jmx_body,jmx_file_name,test_id)
           RESTJMeter::Projector.generate_jmx_file_new(jmx_body,jmx_file_name,test_id)
 
-          time_now=Time.now
+          time_start=Time.now
           # generate daily results dir
-          RESTJMeter::Controller.daily_results_dir(time_now)
+          RESTJMeter::Controller.daily_results_dir(time_start)
           # generate results dir for testid
-          test_results_dir=RESTJMeter::Controller.test_results_dir(time_now,test_id)
+          test_results_dir=RESTJMeter::Controller.test_results_dir(time_start,test_id)
 
           # append perfmon monitor to jmx file
           RESTJMeter::Controller.append_perfmon_to_jmx(jmx_file_name,test_id,jmx_body["TargetHost"],test_results_dir+"/")
 
           # generate jmeter_jtl_temp_file
-          jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_now.to_i}.jtl"
+          jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_start.to_i}.jtl"
           # generate jmeter_csv_file
           jmeter_csv_file="#{test_results_dir}/#{test_id}.csv"
 
           # run testing
           RESTJMeter::Controller.run_jmeter(jmx_file_name,jmeter_jtl_temp_file,jmeter_csv_file)
 
+          # compute time cost
+          time_end=Time.now
+          time_cost=time_end-time_start # unit is second
           # save to db
-          RESTJMeter::Controller.save_data_to_db(time_now,DB,test_id,jmeter_csv_file)
+          RESTJMeter::Controller.save_data_to_db(time_start,time_end,time_cost,DB,test_id,jmeter_csv_file)
 
           RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
 

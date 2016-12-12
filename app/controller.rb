@@ -107,21 +107,22 @@ module RESTJMeter
     # 2. save csv content to database
     # --------------------------------
     # line format: Get_JD_Homepage,40,3458,1060,11139,0,22186,5.00%,1.4,234.3,5063.19
-    def Controller.convert_line_to_db_format(test_id,time_stamp,line)
+    def Controller.convert_line_to_db_format(test_id,time_start,time_end,time_cost,line)
       str_r=line.reverse
       index=str_r.index(",")
       line_data=line[0,line.size-index-1]
       line_data=line_data.tr('%','')
       index_0=line_data.index(',')
-      return "('#{test_id}',#{time_stamp},'#{line_data[0,index_0]}',#{line_data[index_0+1,line_data.size-index_0]})"
+      return "('#{test_id}',#{time_start},#{time_end},#{time_cost},'#{line_data[0,index_0]}',#{line_data[index_0+1,line_data.size-index_0]})"
     end
 
-    def Controller.save_data_to_db(time_now,db,test_id,jmeter_csv_file)
+    def Controller.save_data_to_db(time_start,time_end,time_cost,db,test_id,jmeter_csv_file)
       insert_sql_values_str=""
       begin
         p "[step 2] Reading CSV file #{jmeter_csv_file}..."
         LOGGER.info "[step 2] Reading CSV file #{jmeter_csv_file}..."
-        time_stamp=time_now.to_i
+        time_start_i=time_start.to_i
+        time_end_i=time_end.to_i
         i=0
         # header: sampler_label,aggregate_report_count,average,aggregate_report_median,aggregate_report_90%_line,aggregate_report_min,aggregate_report_max,aggregate_report_error%,aggregate_report_rate,aggregate_report_bandwidth,aggregate_report_stddev
         # line format: Get_JD_Homepage,40,3458,1060,11139,0,22186,5.00%,1.4,234.3,5063.19
@@ -134,7 +135,7 @@ module RESTJMeter
               if(line.index('TOTAL')==0)
                 # ignore the last line
               else
-                insert_sql_values_str=insert_sql_values_str+"#{convert_line_to_db_format(test_id,time_stamp,line)},"
+                insert_sql_values_str=insert_sql_values_str+"#{convert_line_to_db_format(test_id,time_start_i,time_end_i,time_cost,line)},"
               end
             end
           end

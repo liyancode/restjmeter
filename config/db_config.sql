@@ -11,7 +11,9 @@ CREATE TABLE jmeter_aggregate_report
 (
   id serial NOT NULL,
   testid character varying NOT NULL,
-  time_stamp integer NOT NULL,
+  test_start integer NOT NULL,
+  test_end integer NOT NULL,
+  test_time_cost_of_sec double precision NOT NULL,
   label character varying NOT NULL,
   samples integer NOT NULL,
   average integer NOT NULL,
