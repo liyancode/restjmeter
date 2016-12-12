@@ -54,6 +54,7 @@ module RESTJMeter
           doc.xpath("//hashTree//hashTree//hashTree").first<<perfmon_str
           File.open("#{jmx_file_name}", 'w') do |file|
             file.print doc.to_xml
+            file.flush # must flush to sync the latest jmx content for next testing
           end
         end
       rescue Exception=>e
