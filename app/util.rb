@@ -267,13 +267,13 @@ module RESTJMeter
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-274342153">Network I/O</stringProp>
-              <stringProp name="74735694">label=Network_bytesrecv_Kb:bytesrecv</stringProp>
+              <stringProp name="74735694">label=Network_bytesrecv_Kb:unit=kb:bytesrecv</stringProp>
             </collectionProp>
             <collectionProp name="1375348197">
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-274342153">Network I/O</stringProp>
-              <stringProp name="288052530">label=Network_bytessent_Kb:bytessent</stringProp>
+              <stringProp name="288052530">label=Network_bytessent_Kb:unit=kb:bytessent</stringProp>
             </collectionProp>
           </collectionProp>
         </kg.apc.jmeter.perfmon.PerfMonCollector>
