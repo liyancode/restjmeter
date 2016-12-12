@@ -151,13 +151,13 @@ module RESTJMeter
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-1993889503">Memory</stringProp>
-              <stringProp name="820929889">label=Memory_used_mb:unit=mb:used</stringProp>
+              <stringProp name="820929889">label=Memory_used_MB:unit=mb:used</stringProp>
             </collectionProp>
             <collectionProp name="-152984473">
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-1993889503">Memory</stringProp>
-              <stringProp name="560692415">label=Memory_free_mb:unit=mb:free</stringProp>
+              <stringProp name="560692415">label=Memory_free_MB:unit=mb:free</stringProp>
             </collectionProp>
           </collectionProp>
         </kg.apc.jmeter.perfmon.PerfMonCollector>
@@ -267,13 +267,13 @@ module RESTJMeter
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-274342153">Network I/O</stringProp>
-              <stringProp name="74735694">label=Network_bytesrecv:bytesrecv</stringProp>
+              <stringProp name="74735694">label=Network_bytesrecv_Kb:bytesrecv</stringProp>
             </collectionProp>
             <collectionProp name="1375348197">
               <stringProp name="-466184153">'+target_host+'</stringProp>
               <stringProp name="1571004">3450</stringProp>
               <stringProp name="-274342153">Network I/O</stringProp>
-              <stringProp name="288052530">label=Network_bytessent:bytessent</stringProp>
+              <stringProp name="288052530">label=Network_bytessent_Kb:bytessent</stringProp>
             </collectionProp>
           </collectionProp>
         </kg.apc.jmeter.perfmon.PerfMonCollector>
