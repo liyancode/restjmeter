@@ -99,8 +99,8 @@ module RESTJMeter
         LOGGER.error "[step 1] Exception(#{e.to_s}) happened during Generating CSV report. exit!"
         exit
       end
-      p "[step 1] CSV report generated..."
-      LOGGER.info "[step 1] CSV report generated..."
+      p "[step 1] CSV report #{jmeter_csv_file} generated..."
+      LOGGER.info "[step 1] CSV report #{jmeter_csv_file} generated..."
     end
 
     # --------------------------------
@@ -119,8 +119,8 @@ module RESTJMeter
     def Controller.save_data_to_db(time_now,db,test_id,jmeter_csv_file)
       insert_sql_values_str=""
       begin
-        p "[step 2] Reading CSV file..."
-        LOGGER.info "[step 2] Reading CSV file..."
+        p "[step 2] Reading CSV file #{jmeter_csv_file}..."
+        LOGGER.info "[step 2] Reading CSV file #{jmeter_csv_file}..."
         time_stamp=time_now.to_i
         i=0
         # header: sampler_label,aggregate_report_count,average,aggregate_report_median,aggregate_report_90%_line,aggregate_report_min,aggregate_report_max,aggregate_report_error%,aggregate_report_rate,aggregate_report_bandwidth,aggregate_report_stddev
@@ -186,8 +186,8 @@ module RESTJMeter
     def Controller.save_perfmon_data_to_db(db,test_id,jmeter_perfmon_csv_file)
       all_lines=[]
       begin
-        p "[step 2] save_perfmon_data_to_db Reading CSV file..."
-        LOGGER.info "[step 2] save_perfmon_data_to_db Reading CSV file..."
+        p "[step 2] save_perfmon_data_to_db Reading CSV file #{jmeter_perfmon_csv_file}..."
+        LOGGER.info "[step 2] save_perfmon_data_to_db Reading CSV file #{jmeter_perfmon_csv_file}..."
         i=0
         # header: timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,bytes,grpThreads,allThreads,Latency
         # line format: 1481018510840,2020,slce007byx001.slce007.com CPU CPU_user,,,,,true,0,0,0,0
