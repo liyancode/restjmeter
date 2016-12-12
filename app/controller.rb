@@ -151,7 +151,7 @@ module RESTJMeter
         # DB = Sequel.connect(PostgreSQL_Connection)
         p "[step 2] Connecting to DB successfully..."
         LOGGER.info "[step 2] Connecting to DB successfully..."
-        sql="insert into jmeter_aggregate_report(testid,time_stamp,label,samples,average,median,perc90_line,min,max,error_rate,throughput,kb_per_sec) values #{insert_sql_values_str}"
+        sql="insert into jmeter_aggregate_report(testid,test_start,test_end,test_time_cost_of_sec,label,samples,average,median,perc90_line,min,max,error_rate,throughput,kb_per_sec) values #{insert_sql_values_str}"
         LOGGER.info "[step 2] SQL: #{sql}"
         if sql.include?("∞")
           sql.gsub!("∞","0")
