@@ -19,63 +19,68 @@ mutex=Mutex.new
 # init the daemon thread for handling the request messages ONE by ONE( max 1 testing being ran at one time point)!
 Thread.new{
   while true
+    temp_size=0
     mutex.synchronize{
-      if msg_queue.size>0
-        begin
-          p "==Current MSG Q size: #{msg_queue.size}"
-          LOGGER.info("==Current MSG Q size: #{msg_queue.size}, now pop one to test...")
-          temp_msg=msg_queue.pop
-          test_id=temp_msg[0]
-          p "====Testing: #{test_id} started..."
-          LOGGER.info("====Testing: #{test_id} started...")
-          RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'running')
-          jmx_body=temp_msg[1]
-          jmx_file_name="#{CONFIG["JMX_File_DIR"]}#{test_id}.jmx"
-
-          # generate jmx file
-          # generate_jmx_file(jmx_body,jmx_file_name,test_id)
-          RESTJMeter::Projector.generate_jmx_file_new(jmx_body,jmx_file_name,test_id)
-
-          time_start=Time.now
-          # generate daily results dir
-          RESTJMeter::Controller.daily_results_dir(time_start)
-          # generate results dir for testid
-          test_results_dir=RESTJMeter::Controller.test_results_dir(time_start,test_id)
-
-          # append perfmon monitor to jmx file
-          RESTJMeter::Controller.append_perfmon_to_jmx(jmx_file_name,test_id,jmx_body["TargetHost"],test_results_dir+"/")
-
-          # generate jmeter_jtl_temp_file
-          jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_start.to_i}.jtl"
-          # generate jmeter_csv_file
-          jmeter_csv_file="#{test_results_dir}/#{test_id}.csv"
-
-          # run testing
-          RESTJMeter::Controller.run_jmeter(jmx_file_name,jmeter_jtl_temp_file,jmeter_csv_file)
-
-          # compute time cost
-          time_end=Time.now
-          time_cost=time_end-time_start # unit is second
-          # save to db
-          RESTJMeter::Controller.save_data_to_db(time_start,time_end,time_cost,DB,test_id,jmeter_csv_file)
-
-          RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
-
-          # save all perfmon metrics data to db
-          RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,test_id,test_results_dir)
-          # RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,"1612061001_LB_KI","/Users/yanli6/Desktop/1612061001_LB_KI")
-          # delete temp files.
-          # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
-          p "====Testing: #{test_id} end."
-          LOGGER.info("====Testing: #{test_id} end.")
-        rescue Exception=>e
-          p e
-          LOGGER.error("====Testing: #{test_id} error:#{e}")
-          RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')
-          LOGGER.info("====Testing: #{test_id} end.")
-        end
-      end
+      temp_size=msg_queue.size
     }
+    if msg_queue.size>0
+      begin
+        p "==Current MSG Q size: #{temp_size}"
+        LOGGER.info("==Current MSG Q size: #{temp_size}, now pop one to test...")
+        temp_msg=[]
+        mutex.synchronize{
+          temp_msg=msg_queue.pop
+        }
+        test_id=temp_msg[0]
+        p "====Testing: #{test_id} started..."
+        LOGGER.info("====Testing: #{test_id} started...")
+        RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'running')
+        jmx_body=temp_msg[1]
+        jmx_file_name="#{CONFIG["JMX_File_DIR"]}#{test_id}.jmx"
+
+        # generate jmx file
+        # generate_jmx_file(jmx_body,jmx_file_name,test_id)
+        RESTJMeter::Projector.generate_jmx_file_new(jmx_body,jmx_file_name,test_id)
+
+        time_start=Time.now
+        # generate daily results dir
+        RESTJMeter::Controller.daily_results_dir(time_start)
+        # generate results dir for testid
+        test_results_dir=RESTJMeter::Controller.test_results_dir(time_start,test_id)
+
+        # append perfmon monitor to jmx file
+        RESTJMeter::Controller.append_perfmon_to_jmx(jmx_file_name,test_id,jmx_body["TargetHost"],test_results_dir+"/")
+
+        # generate jmeter_jtl_temp_file
+        jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_start.to_i}.jtl"
+        # generate jmeter_csv_file
+        jmeter_csv_file="#{test_results_dir}/#{test_id}.csv"
+
+        # run testing
+        RESTJMeter::Controller.run_jmeter(jmx_file_name,jmeter_jtl_temp_file,jmeter_csv_file)
+
+        # compute time cost
+        time_end=Time.now
+        time_cost=time_end-time_start # unit is second
+        # save to db
+        RESTJMeter::Controller.save_data_to_db(time_start,time_end,time_cost,DB,test_id,jmeter_csv_file)
+
+        RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
+
+        # save all perfmon metrics data to db
+        RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,test_id,test_results_dir)
+        # RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,"1612061001_LB_KI","/Users/yanli6/Desktop/1612061001_LB_KI")
+        # delete temp files.
+        # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
+        p "====Testing: #{test_id} end."
+        LOGGER.info("====Testing: #{test_id} end.")
+      rescue Exception=>e
+        p e
+        LOGGER.error("====Testing: #{test_id} error:#{e}")
+        RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'fail')
+        LOGGER.info("====Testing: #{test_id} end.")
+      end
+    end
     sleep(1) # 1 sec interval heartbeat
   end
 }
@@ -116,6 +121,7 @@ end
 #     "TargetHost"=>"***.com"
 # }
 post '/rest/jmx' do
+  p "post"
   if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
     LOGGER.info("Access log. Request with invalid HTTP_X_RESTJMETER_TOKEN:#{request.env["HTTP_X_RESTJMETER_TOKEN"]}")
     status 403
@@ -170,4 +176,30 @@ get '/rest/result/:testid' do
     end
     {:test_id=>test_id,:status=>log_status,:results=>result}.to_json
   end
+end
+
+get '/rest/waitingsize' do
+  LOGGER.info("Access log. GET: #{request}")
+  if request.env["HTTP_X_RESTJMETER_TOKEN"]!=CONFIG["X_RESTJmeter_TOKEN"]
+    LOGGER.info("Access log. Request with invalid HTTP_X_RESTJMETER_TOKEN:#{request.env["HTTP_X_RESTJMETER_TOKEN"]}")
+    status 403
+    '{error:"X_RESTJmeter_TOKEN incorrect"}'
+  else
+    size=-1
+    mutex.synchronize{
+      size=msg_queue.size
+    }
+    status 200
+    size
+  end
+end
+
+get '/rest/hello' do
+  status 200
+  size=-1
+  mutex.synchronize{
+    size= msg_queue.size
+  }
+  p "Q size:#{size}"
+  {:status=>"good",:queue_size=>size}.to_json
 end
