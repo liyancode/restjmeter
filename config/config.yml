@@ -1,5 +1,5 @@
 # Global Config
-SinatraPort: 9999
+SinatraPort: 9997
 X_RESTJmeter_TOKEN: "UkVTVEptZXRlcl9UT0tFTg==" # Header for Auth
 DataBase_Connection: "postgres://postgres:root@localhost:5432/restjmeter"
 User_Defined_Vars_CSV_Dir: "/Users/yanli6/Personal/DevDir/Code/rubymine/jmeter_auto_rest_service/test/csv_data_set_files/"
@@ -12,3 +12,5 @@ ThreadGroup_RampUpPeriod_Default: 0
 
 System_Log_File: "/Users/yanli6/Personal/DevDir/Code/rubymine/testproj/xmltest/xmlfile/system_log.log"
 System_Log_Level: "DEBUG"
+
+Aggregate_Error_Rate_Threshold: 10
