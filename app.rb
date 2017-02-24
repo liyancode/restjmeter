@@ -180,7 +180,7 @@ get '/rest/result/:testid' do
       status 404
       return {:test_id=>test_id,:status=>"404"}.to_json
     end
-    if log_status=='success'
+    if log_status=='success'||log_status=='error'
       DB.fetch("select * from jmeter_aggregate_report where testid='#{test_id}'").each{|row|
         result<<row
       }
