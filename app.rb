@@ -68,7 +68,12 @@ Thread.new{
         # save to db
         RESTJMeter::Controller.save_data_to_db(time_start,time_end,time_cost,DB,test_id,jmeter_csv_file)
 
-        RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
+        error_rate=DB.fetch("select error_rate from jmeter_aggregate_report where testid='#{test_id}'").map(:error_rate)[0]
+        if error_rate>CONFIG["Aggregate_Error_Rate_Threshold"]
+          RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'error')
+        else
+          RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'success')
+        end
 
         if perfmon_switch=='true'
           # save all perfmon metrics data to db
