@@ -28,6 +28,7 @@ module RESTJMeter
     #        ["variable_name1","4124324312,43214134,41514554,54352525,542352345,54235"],
     #        []
     #     ],
+    #     "PerfmonSwitch"=>'*',//'true' or 'false'
     #     "TargetHost"=>"***.com"
     # }
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
@@ -64,6 +65,7 @@ module RESTJMeter
                 csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
+            view_results_tree
             visit name:"#{body_hash["API"]["Http_or_Https"]}://#{body_hash["API"]["ServerName_or_IP"]}#{body_hash["API"]["Path"]}_#{method_type.upcase}".gsub!('$',''),
                   url:"#{body_hash["API"]["ServerName_or_IP"]}",
                   protocol:"#{body_hash["API"]["Http_or_Https"]}",
@@ -89,6 +91,7 @@ module RESTJMeter
               csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
+            view_results_tree
             post name:"#{body_hash["API"]["Http_or_Https"]}://#{body_hash["API"]["ServerName_or_IP"]}#{body_hash["API"]["Path"]}_#{method_type.upcase}".gsub!('$',''),
                  url:"#{body_hash["API"]["ServerName_or_IP"]}",
                  protocol:"#{body_hash["API"]["Http_or_Https"]}",
@@ -115,6 +118,7 @@ module RESTJMeter
               csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
+            view_results_tree
             post name:"#{body_hash["API"]["Http_or_Https"]}://#{body_hash["API"]["ServerName_or_IP"]}#{body_hash["API"]["Path"]}_#{method_type.upcase}".gsub!('$',''),
                  url:"#{body_hash["API"]["ServerName_or_IP"]}",
                  protocol:"#{body_hash["API"]["Http_or_Https"]}",
