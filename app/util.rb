@@ -1,4 +1,4 @@
-# util.rb
+# util.rb **
 module RESTJMeter
   class Util
     # generate testid
