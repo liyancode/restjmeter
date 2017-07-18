@@ -81,4 +81,4 @@ Response:
 ```
 Will support more type of request: PUT, DELETE, ...
 
-last editted at Jul 18 2017
+New foot
