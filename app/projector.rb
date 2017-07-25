@@ -29,7 +29,8 @@ module RESTJMeter
     #        []
     #     ],
     #     "PerfmonSwitch"=>'*',//'true' or 'false'
-    #     "TargetHost"=>"***.com"
+    #     "TargetHost"=>"***.com",
+    #     "FunctionTest"=>true/false
     # }
     def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
       # judge UserDefinedVariables is null or not
@@ -51,6 +52,8 @@ module RESTJMeter
         header_array<<{name:h[0],value:h[1]}
       }
       method_type=body_hash["API"]["Method"]
+      isfunctest=body_hash["FunctionTest"]
+
       if method_type.upcase=='GET'
         p "#{test_id} GET"
         LOGGER.info "#{test_id} GET"
