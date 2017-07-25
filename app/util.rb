@@ -431,7 +431,7 @@ module RESTJMeter
     # d
     def Util.insert_function_test_result(db,test_id,status_code,response_body)
       begin
-        db.fetch("insert into jmeter_function_test_result(testid,response_code,response_body,time_stamp) values('#{test_id}',#{status_code},'#{response_body}'#{Time.now})").insert
+        db.fetch("insert into jmeter_function_test_result(testid,response_code,response_body,time_stamp) values('#{test_id}',#{status_code},'#{response_body}','#{Time.now.utc}')").insert
       rescue Exception=>e
         p e
         LOGGER.error "Util.log_jmx_str #{e}"
