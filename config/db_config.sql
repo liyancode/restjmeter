@@ -83,3 +83,22 @@ ALTER TABLE jmeter_perfmon_metric
   OWNER TO postgres;
 
 CREATE INDEX ON jmeter_perfmon_metric (testid);
+
+--
+-- table for jmeter_function_test_result
+CREATE TABLE jmeter_function_test_result
+(
+  id serial NOT NULL,
+  testid character varying NOT NULL,
+  response_code int not NULL ,
+  response_body text,
+  time_stamp TIMESTAMP NOT NULL,
+  CONSTRAINT jmeter_function_test_result_pkey PRIMARY KEY (id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE jmeter_function_test_result
+  OWNER TO postgres;
+
+CREATE INDEX ON jmeter_function_test_result (testid);
