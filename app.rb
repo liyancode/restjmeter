@@ -54,6 +54,13 @@ Thread.new{
           RESTJMeter::Controller.append_perfmon_to_jmx(jmx_file_name,test_id,jmx_body["TargetHost"],test_results_dir+"/")
         end
 
+        # FunctionTest
+        is_func_test=jmx_body["FunctionTest"]
+        if is_func_test=='true'||is_func_test==true
+          # append Regular Expression Extractor status code xml part to jmx file
+          p "append Regular Expression Extractor status code xml part to jmx file"
+        end
+
         # generate jmeter_jtl_temp_file
         jmeter_jtl_temp_file="#{test_results_dir}/temp_jtl_#{time_start.to_i}.jtl"
         # generate jmeter_csv_file
@@ -213,4 +220,21 @@ get '/rest/hello' do
   }
   p "Q size:#{size}"
   {:status=>"good",:queue_size=>size}.to_json
+end
+
+# function test result
+# path params must contains: ?testid=177e8&status_code=200
+# body is the response body
+post '/rest/result/function' do
+  begin
+    if params[:testid]!=nil&&params[:status_code]!=nil
+      RESTJMeter::Util.insert_function_test_result(DB,params[:testid],params[:status_code].to_i,request.body.read)
+      status 200
+    else
+      status 400
+    end
+  rescue Exception=>e
+    p e
+    LOGGER.error(e)
+  end
 end
