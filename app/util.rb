@@ -415,5 +415,17 @@ module RESTJMeter
         return 'unknow'
       end
     end
+
+    # generate_extract_status_code_xml_str
+    def Util.generate_extract_status_code_xml_str
+      '<RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="ResponseCode" enabled="true">
+            <stringProp name="RegexExtractor.useHeaders">code</stringProp>
+            <stringProp name="RegexExtractor.refname">ResponseCode</stringProp>
+            <stringProp name="RegexExtractor.regex">(?s)(^.*)</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default"></stringProp>
+            <stringProp name="RegexExtractor.match_number"></stringProp>
+          </RegexExtractor><hashTree/>'
+    end
   end
 end
