@@ -79,5 +79,6 @@ Response:
     ]
 }  
 ```
-
 Will support more type of request: PUT, DELETE, ...
+
+New foot
