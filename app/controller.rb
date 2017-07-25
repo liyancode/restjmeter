@@ -63,6 +63,28 @@ module RESTJMeter
         exit
       end
     end
+
+    # jmx_file_name: ****.jmx
+    # test_results_dir must end with '\' like 'C:\perf-team-shared-files\yanli\projects\restjmeter\data\perfmon_jmx\'
+    def Controller.append_extract_status_code_to_jmx(jmx_file_name)
+      p "[step 0.2] append_extract_status_code_to_jmx..."
+      LOGGER.info "[step 0.2] append_extract_status_code_to_jmx..."
+      begin
+        doc=Nokogiri::XML(File.open("#{jmx_file_name}"))
+        extract_status_code_str=Util.generate_extract_status_code_xml_str
+        if extract_status_code_str!=nil
+          doc.xpath("//hashTree//hashTree//hashTree//hashTree")[2]<<extract_status_code_str
+          File.open("#{jmx_file_name}", 'w') do |file|
+            file.print doc.to_xml
+            file.flush # must flush to sync the latest jmx content for next testing
+          end
+        end
+      rescue Exception=>e
+        p "[step 0.2] Exception(#{e.to_s}) happened when append_extract_status_code_to_jmx!"
+        LOGGER.error "[step 0.2] Exception(#{e.to_s}) happened when append_extract_status_code_to_jmx!"
+        exit
+      end
+    end
     # ----------------------------------------------------------------
     # 1. run jmeter testing(CMD), generate aggregate report .csv file
     # ----------------------------------------------------------------
