@@ -78,6 +78,21 @@ module RESTJMeter
                   connect_timeout: '30000',
                   response_timeout: '60000' do
               header header_array
+              if isfunctest
+                extract name: 'ResponseBody', regex: '(?s)(^.*)'
+              end
+            end
+            if isfunctest
+              post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
+                   url:"localhost",
+                   port:CONFIG["SinatraPort"],
+                   protocol:"http",
+                   method:"POST",
+                   path: "/rest/result/function?testid=#{test_id}&status_code=${ResponseCode}",
+                   implementation:'HttpClient4',
+                   connect_timeout: '30000',
+                   response_timeout: '60000',
+                   raw_body:'${ResponseBody}'
             end
           end
         end.jmx(file: jmx_file_name)
@@ -105,6 +120,21 @@ module RESTJMeter
                  response_timeout: '60000',
                  raw_body:body_hash["API"]["BodyData"] do
               header header_array
+              if isfunctest
+                extract name: 'ResponseBody', regex: '(?s)(^.*)'
+              end
+            end
+            if isfunctest
+              post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
+                   url:"localhost",
+                   port:CONFIG["SinatraPort"],
+                   protocol:"http",
+                   method:"POST",
+                   path: "/rest/result/function?testid=#{test_id}&status_code=${ResponseCode}",
+                   implementation:'HttpClient4',
+                   connect_timeout: '30000',
+                   response_timeout: '60000',
+                   raw_body:'${ResponseBody}'
             end
           end
         end.jmx(file: jmx_file_name)
@@ -132,6 +162,21 @@ module RESTJMeter
                  response_timeout: '60000',
                  raw_body:body_hash["API"]["BodyData"] do
               header header_array
+              if isfunctest
+                extract name: 'ResponseBody', regex: '(?s)(^.*)'
+              end
+            end
+            if isfunctest
+              post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
+                   url:"localhost",
+                   port:CONFIG["SinatraPort"],
+                   protocol:"http",
+                   method:"POST",
+                   path: "/rest/result/function?testid=#{test_id}&status_code=${ResponseCode}",
+                   implementation:'HttpClient4',
+                   connect_timeout: '30000',
+                   response_timeout: '60000',
+                   raw_body:'${ResponseBody}'
             end
           end
         end.jmx(file: jmx_file_name)
