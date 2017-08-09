@@ -73,7 +73,7 @@ module RESTJMeter
         doc=Nokogiri::XML(File.open("#{jmx_file_name}"))
         extract_status_code_str=Util.generate_extract_status_code_xml_str
         if extract_status_code_str!=nil
-          doc.xpath("//hashTree//hashTree//hashTree//hashTree")[2]<<extract_status_code_str
+          doc.xpath("//hashTree//hashTree//hashTree//hashTree")[3]<<extract_status_code_str
           File.open("#{jmx_file_name}", 'w') do |file|
             file.print doc.to_xml
             file.flush # must flush to sync the latest jmx content for next testing
