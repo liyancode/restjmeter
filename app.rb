@@ -160,7 +160,7 @@ post '/rest/jmx' do
         }
       }
       status 202
-      {:test_id=>test_id}.to_json # return the unique test_id
+      MultiJson.dump({:test_id=>test_id})# return the unique test_id
     rescue Exception=>e
       p e
       p "Incorrect body:#{body_str}"
@@ -188,14 +188,14 @@ get '/rest/result/:testid' do
     }
     if log_status=='-1'
       status 404
-      return {:test_id=>test_id,:status=>"404"}.to_json
+      return MultiJson.dump({:test_id=>test_id,:status=>"404"})
     end
     if log_status=='success'||log_status=='error'
       DB.fetch("select * from jmeter_aggregate_report where testid='#{test_id}'").each{|row|
         result<<row
       }
     end
-    {:test_id=>test_id,:status=>log_status,:results=>result}.to_json
+    MultiJson.dump({:test_id=>test_id,:status=>log_status,:results=>result})
   end
 end
 
@@ -222,7 +222,7 @@ get '/rest/hello' do
     size= msg_queue.size
   }
   p "Q size:#{size}"
-  {:status=>"good",:queue_size=>size}.to_json
+  MultiJson.dump({:status=>"good",:queue_size=>size})
 end
 
 # function test result
