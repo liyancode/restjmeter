@@ -59,6 +59,7 @@ Thread.new{
         if is_func_test=='true'||is_func_test==true
           # append Regular Expression Extractor status code xml part to jmx file
           p "append Regular Expression Extractor status code xml part to jmx file"
+          RESTJMeter::Controller.append_extract_status_code_to_jmx(jmx_file_name)
         end
 
         # generate jmeter_jtl_temp_file
@@ -107,7 +108,9 @@ Thread.new{
 # REST api
 
 # filter. requests that not begin with '/rest' will be recognized as bad request
-before /^(?!\/(rest).*)/ do
+pattern = Mustermann.new('/*', except:'/rest')
+
+before pattern do
   LOGGER.info("Access log. Bad request in:#{request}")
   status 400
   '{error:"bad request. your request endpoint should start with /rest."}'
@@ -236,5 +239,6 @@ post '/rest/result/function' do
   rescue Exception=>e
     p e
     LOGGER.error(e)
+    status 500
   end
 end
