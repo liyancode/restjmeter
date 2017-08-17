@@ -42,7 +42,7 @@ Thread.new{
         if !Dir.exist?(@test_id_dir)
           Dir.mkdir(@test_id_dir,0700) # not exited
         end
-        jmx_file_name="#{@test_id_dir}#{test_id}.jmx"
+        jmx_file_name="#{@test_id_dir}/#{test_id}.jmx"
 
         # generate jmx file
         # generate_jmx_file(jmx_body,jmx_file_name,test_id)
@@ -93,6 +93,17 @@ Thread.new{
           # save all perfmon metrics data to db
           RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,test_id,test_results_dir)
         end
+
+        #when test finished, new a async thread upload the script files to distributor: .jmx and .csv files
+        Thread.new{
+          Dir["#{@test_id_dir}/*"].each{|filename|
+            RestClient.post("#{CONFIG["JMX_CSV_Upload_API"]}",
+                            :test_id=>test_id,
+                            :file => File.new(filename))
+          }
+          p "======Uploaded all jmx&csv to server."
+        }
+
         # RESTJMeter::Controller.save_all_perfmon_data_to_db(DB,"1612061001_LB_KI","/Users/yanli6/Desktop/1612061001_LB_KI")
         # delete temp files.
         # RESTJMeter::Controller.delete_temp_jtl(jmeter_jtl_temp_file) # 161206: keep jtl file, not delete
