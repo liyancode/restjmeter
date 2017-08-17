@@ -36,11 +36,17 @@ Thread.new{
         LOGGER.info("====Testing: #{test_id} started...")
         RESTJMeter::Util.update_log_jmx_str_status(DB,test_id,'running')
         jmx_body=temp_msg[1]
-        jmx_file_name="#{CONFIG["JMX_File_DIR"]}#{test_id}.jmx"
+
+        # create the test id dir
+        @test_id_dir="#{CONFIG["JMX_File_DIR"]}/#{test_id}"
+        if !Dir.exist?(@test_id_dir)
+          Dir.mkdir(@test_id_dir,0700) # not exited
+        end
+        jmx_file_name="#{@test_id_dir}#{test_id}.jmx"
 
         # generate jmx file
         # generate_jmx_file(jmx_body,jmx_file_name,test_id)
-        RESTJMeter::Projector.generate_jmx_file_new(jmx_body,jmx_file_name,test_id)
+        RESTJMeter::Projector.generate_jmx_file_new(jmx_body,jmx_file_name,test_id,@test_id_dir)
 
         time_start=Time.now
         # generate daily results dir
