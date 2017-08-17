@@ -32,14 +32,14 @@ module RESTJMeter
     #     "TargetHost"=>"***.com",
     #     "FunctionTest"=>true/false
     # }
-    def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id)
+    def Projector.generate_jmx_file_new(body_hash,jmx_file_name,test_id,test_id_dir)
       # judge UserDefinedVariables is null or not
       p body_hash
       LOGGER.info body_hash
       user_defined_vars=body_hash["UserDefinedVariables"]
       if user_defined_vars.size!=0
         user_defined_vars.each{|var_arr|
-          csv= File.new("#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv","a")
+          csv= File.new("#{test_id_dir}/#{test_id}_#{var_arr[0]}.csv","a")
           csv.puts(var_arr[1].split(","))
           csv.flush
           # STDOUT.flush
@@ -54,6 +54,8 @@ module RESTJMeter
       method_type=body_hash["API"]["Method"]
       isfunctest=body_hash["FunctionTest"]
 
+      func_only=(isfunctest==true||isfunctest=='true')
+
       if method_type.upcase=='GET'
         p "#{test_id} GET"
         LOGGER.info "#{test_id} GET"
@@ -65,7 +67,7 @@ module RESTJMeter
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
             user_defined_vars.each{|var_arr|
-                csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+                csv_data_set_config name:var_arr[0], filename: "#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
             view_results_tree
@@ -78,11 +80,11 @@ module RESTJMeter
                   connect_timeout: '30000',
                   response_timeout: '60000' do
               header header_array
-              if isfunctest
+              if func_only
               extract name: 'ResponseBody', regex: '(?s)(^.*)'
               end
             end
-            if isfunctest
+            if func_only
             post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
                  url:"localhost",
                  port:CONFIG["SinatraPort"],
@@ -106,7 +108,7 @@ module RESTJMeter
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
             user_defined_vars.each{|var_arr|
-              csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+              csv_data_set_config name:var_arr[0], filename: "#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
             view_results_tree
@@ -120,11 +122,11 @@ module RESTJMeter
                  response_timeout: '60000',
                  raw_body:body_hash["API"]["BodyData"] do
               header header_array
-              if isfunctest
+              if func_only
               extract name: 'ResponseBody', regex: '(?s)(^.*)'
               end
             end
-            if isfunctest
+            if func_only
             post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
                  url:"localhost",
                  port:CONFIG["SinatraPort"],
@@ -148,7 +150,7 @@ module RESTJMeter
                   scheduler:false do
             cookies clear_each_iteration: true# HTTP Cookie Manager
             user_defined_vars.each{|var_arr|
-              csv_data_set_config name:var_arr[0], filename: "#{CONFIG["User_Defined_Vars_CSV_Dir"]}#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
+              csv_data_set_config name:var_arr[0], filename: "#{test_id}_#{var_arr[0]}.csv",variableNames:var_arr[0]
             }
             aggregate_report
             view_results_tree
@@ -162,11 +164,11 @@ module RESTJMeter
                  response_timeout: '60000',
                  raw_body:body_hash["API"]["BodyData"] do
               header header_array
-              if isfunctest
+              if func_only
               extract name: 'ResponseBody', regex: '(?s)(^.*)'
               end
             end
-            if isfunctest
+            if func_only
             post name:"http://localhost:#{CONFIG["SinatraPort"]}/rest/result/function",
                  url:"localhost",
                  port:CONFIG["SinatraPort"],
